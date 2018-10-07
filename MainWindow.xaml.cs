@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
@@ -24,6 +26,8 @@ namespace DBMPlayer
     /// </summary>
     public partial class MainWindow : Window
     {
+        
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,7 +42,7 @@ namespace DBMPlayer
 
         private void Button_Click_Next(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
 
