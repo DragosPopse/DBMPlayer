@@ -31,12 +31,14 @@ namespace DBMPlayer
         GlobalKeyboardHook _keyHook;
         DispatcherTimer _timer;
 
-        public MainWindow()
+        public MainWindow() 
         {
             InitializeComponent();
+            //Visibility = Visibility.Hidden; //uncoment this if you want no interface
 
             _keyHook = new GlobalKeyboardHook();
-            _keyHook.AddCallback("Play", Keys.D1, Play);
+            _keyHook.AddCallback("Play", Keys.NumPad5, Play);
+            _keyHook.AddCallback("Exit", Keys.NumPad2, () => { Environment.Exit(0); });
 
             _timer = new DispatcherTimer();
             _timer.Tick += new EventHandler(UpdateKeyboardHook);
