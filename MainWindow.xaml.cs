@@ -13,6 +13,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
+
+
 namespace DBMPlayer
 {
     /// <summary>
@@ -28,7 +32,7 @@ namespace DBMPlayer
 
         private void Button_Click_Previous(object sender, RoutedEventArgs e)
         {
-
+            
         }
 
 
@@ -40,7 +44,10 @@ namespace DBMPlayer
 
         private void Button_Click_Pause(object sender, RoutedEventArgs e)
         {
-
+            var outputDevice = new WaveOutEvent();
+            var audioFile = new AudioFileReader(@"D:\Music\01 Anaa (Live).mp3");
+            outputDevice.Init(audioFile);
+            outputDevice.Play();
         }
     }
 }

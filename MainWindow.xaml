@@ -9,7 +9,7 @@
     <Grid>
         <Button Content="&lt;" HorizontalAlignment="Left" Margin="10,355,0,0" VerticalAlignment="Top" Width="126" Height="55" Click="Button_Click_Previous"/>
         <Button Content="&gt;" HorizontalAlignment="Left" Margin="658,355,0,0" VerticalAlignment="Top" Width="126" Height="55" Click="Button_Click_Next"/>
-        <Button Content="||" HorizontalAlignment="Left" Margin="340,355,0,0" VerticalAlignment="Top" Width="126" Height="55" Click="Button_Click_Pause"/>
+        <Button Content="||" HorizontalAlignment="Left" Margin="340,355,0,0" VerticalAlignment="Top" Width="126" Height="55" Click="Button_Click_Pause" Background="#FFFF2424"/>
 
     </Grid>
 </Window>
