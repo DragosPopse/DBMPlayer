@@ -15,8 +15,14 @@ namespace DBMPlayer
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
         private const int WM_KEYUP = 0x0101;
+
         private LowLevelKeyboardProc _proc;
-        private static IntPtr _hookID = IntPtr.Zero;
+        private IntPtr _hookID = IntPtr.Zero;
+
+        private Dictionary<Keys, Action> _callbacks = new Dictionary<Keys, Action>();
+        private Dictionary<string, Keys> _callbackKeys = new Dictionary<string, Keys>();
+        private Keys _keyPressed = Keys.None;
+        
 
         public GlobalKeyboardHook()
         {
@@ -28,6 +34,30 @@ namespace DBMPlayer
         ~GlobalKeyboardHook()
         {
             UnhookWindowsHookEx(_hookID);
+        }
+
+
+        public void Update()
+        {
+            if (_keyPressed != Keys.None && _callbacks.ContainsKey(_keyPressed))
+            {
+                _callbacks[_keyPressed]();
+            }
+            _keyPressed = Keys.None;
+        }
+
+
+        public void AddCallback(string id, Keys key, Action action)
+        {
+            _callbacks.Add(key, action);
+            _callbackKeys.Add(id, key);
+        }
+
+
+        public void RemoveCallback(string id)
+        {
+            _callbacks.Remove(_callbackKeys[id]);
+            _callbackKeys.Remove(id);
         }
 
 
@@ -50,7 +80,11 @@ namespace DBMPlayer
             if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN)
             {
                 int vkCode = Marshal.ReadInt32(lParam);
-                Console.Write((Keys)vkCode);
+                Keys key = (Keys)vkCode;
+                if (GetAsyncKeyState(Keys.ControlKey) != 0)
+                {
+                    _keyPressed = key;
+                }
             }
 
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
@@ -70,6 +104,12 @@ namespace DBMPlayer
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetModuleHandle(string lpModuleName);
 
+        /// <summary>
+        /// Determines whether a key is up or down at the time the function is called, and whether the 
+        /// key was pressed after a previous call to GetAsyncKeyState.
+        /// </summary>
+        /// <param name="vKey">The virtual-key code</param>
+        /// <returns></returns>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern short GetAsyncKeyState(System.Windows.Forms.Keys vKey);
     }
