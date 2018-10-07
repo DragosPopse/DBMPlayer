@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
+using Notifications.Wpf;
 
 namespace DBMPlayer
 {
@@ -20,6 +21,7 @@ namespace DBMPlayer
         private IntPtr _hookID = IntPtr.Zero;
 
         private Dictionary<Keys, Action> _callbacks = new Dictionary<Keys, Action>();
+        private List<Keys> _keys = new List<Keys>();
         private Dictionary<string, Keys> _callbackKeys = new Dictionary<string, Keys>();
         private Keys _keyPressed = Keys.None;
         
@@ -51,12 +53,14 @@ namespace DBMPlayer
         {
             _callbacks.Add(key, action);
             _callbackKeys.Add(id, key);
+            _keys.Add(key);
         }
 
 
         public void RemoveCallback(string id)
         {
             _callbacks.Remove(_callbackKeys[id]);
+            _keys.Remove(_callbackKeys[id]);
             _callbackKeys.Remove(id);
         }
 
@@ -84,6 +88,7 @@ namespace DBMPlayer
                 if (GetAsyncKeyState(Keys.ControlKey) != 0)
                 {
                     _keyPressed = key;
+                    
                 }
             }
 

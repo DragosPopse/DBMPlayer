@@ -20,6 +20,8 @@ using System.Windows.Forms;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 
+using Notifications.Wpf;
+
 
 namespace DBMPlayer
 {
@@ -34,13 +36,14 @@ namespace DBMPlayer
         public MainWindow() 
         {
             InitializeComponent();
-            Visibility = Visibility.Hidden; //uncoment this if you want no interface
+            //Visibility = Visibility.Hidden; //uncoment this if you want no interface
 
             _keyHook = new GlobalKeyboardHook();
             _keyHook.AddCallback("Play", Keys.NumPad5, Play);
             _keyHook.AddCallback("Exit", Keys.NumPad2, 
                 () => 
             {
+                
                 if (Visibility != Visibility.Hidden)
                 {
                     Visibility = Visibility.Hidden;
