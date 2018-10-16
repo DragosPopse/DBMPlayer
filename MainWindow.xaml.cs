@@ -20,7 +20,6 @@ using System.Windows.Controls.Primitives;
 using Microsoft.Win32;
 
 
-
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 
