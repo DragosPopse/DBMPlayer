@@ -32,12 +32,10 @@ namespace DBMPlayer
             _hookID = SetHook(_proc);
         }
 
-
         ~GlobalKeyboardHook()
         {
             UnhookWindowsHookEx(_hookID);
         }
-
 
         public void Update()
         {
@@ -48,7 +46,6 @@ namespace DBMPlayer
             _keyPressed = Keys.None;
         }
 
-
         public void AddCallback(string id, Keys key, Action action)
         {
             _callbacks.Add(key, action);
@@ -56,14 +53,12 @@ namespace DBMPlayer
             _keys.Add(key);
         }
 
-
         public void RemoveCallback(string id)
         {
             _callbacks.Remove(_callbackKeys[id]);
             _keys.Remove(_callbackKeys[id]);
             _callbackKeys.Remove(id);
         }
-
 
         private IntPtr SetHook(LowLevelKeyboardProc proc)
         {
@@ -75,9 +70,7 @@ namespace DBMPlayer
             }
         }
 
-
         private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
-
 
         private IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
@@ -94,7 +87,6 @@ namespace DBMPlayer
 
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
         }
-
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);

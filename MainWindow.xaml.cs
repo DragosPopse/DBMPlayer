@@ -18,6 +18,7 @@ using System.Windows.Threading;
 using System.Windows.Forms;
 using System.Windows.Controls.Primitives;
 using Microsoft.Win32;
+using System.IO;
 
 
 using NAudio.Wave;
@@ -33,17 +34,21 @@ namespace DBMPlayer
     /// </summary>
     public partial class MainWindow : Window
     {
-        GlobalKeyboardHook _keyHook;
-        DispatcherTimer _timer;
+        private GlobalKeyboardHook _keyHook;
+        private DispatcherTimer _timer;
+        private NotificationManager _notifManager;
+
+        private List<MusicTrack> _libraryTracks;
 
         public MainWindow() 
         {
             InitializeComponent();
-            //Visibility = Visibility.Hidden; //uncoment this if you want no interface
-
+            _notifManager = new NotificationManager();
             _keyHook = new GlobalKeyboardHook();
+            _libraryTracks = new List<MusicTrack>();
+
             //_keyHook.AddCallback("Play", Keys.NumPad5, Play);
-            _keyHook.AddCallback("Exit", Keys.NumPad2, 
+            _keyHook.AddCallback("HideShow", Keys.NumPad2, 
                 () => 
             {
                 
@@ -61,12 +66,23 @@ namespace DBMPlayer
             _timer.Tick += new EventHandler(UpdateKeyboardHook);
             _timer.Interval += new TimeSpan(0, 0, 0, 0, 34);
             _timer.Start();
-        }
 
+            AddTracksFromFolder(@"D:\Music\");
+        }
 
         private void UpdateKeyboardHook(object sender, EventArgs e)
         {
             _keyHook.Update();
+        }
+
+        private void AddTracksFromFolder(string path)
+        {
+            string[] trackPaths = Directory.GetFiles(path, "*.mp3");
+            for (int i = 0; i < trackPaths.Length; i++)
+            {
+                _libraryTracks.Add(new MusicTrack(trackPaths[i]));
+                //_notifManager.ShowInfo(trackPaths[i]);
+            }
         }
     }
 }

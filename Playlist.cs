@@ -44,6 +44,14 @@ namespace DBMPlayer
             }
         }
 
+        public List<MusicTrack> Tracks
+        {
+            get
+            {
+                return Tracks;
+            }
+        }
+
         private List<MusicTrack> _tracks;
         private List<int> _playOrder;
         private int _playIndex;
