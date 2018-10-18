@@ -48,7 +48,15 @@ namespace DBMPlayer
         {
             get
             {
-                return Tracks;
+                return _tracks;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return _name;
             }
         }
 
@@ -57,13 +65,15 @@ namespace DBMPlayer
         private int _playIndex;
         private int _currentOrderIndex;
         private bool _repeat;
+        private string _name;
 
-        public Playlist()
+        public Playlist(string name)
         {
             _tracks = new List<MusicTrack>();
             _playOrder = new List<int>();
             _playIndex = 0;
             _currentOrderIndex = 0;
+            _name = name;
         }
 
         public void AddTrack(MusicTrack track)

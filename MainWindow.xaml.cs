@@ -87,6 +87,11 @@ namespace DBMPlayer
             _keyHook.Update();
         }
 
+        private void OnExit(object sender, EventArgs e)
+        {
+
+        }
+
         private void AddTracksFromFolder(string path)
         {
             string[] trackPaths = Directory.GetFiles(path, "*.mp3");
@@ -125,17 +130,83 @@ namespace DBMPlayer
 
         private void LoadPlaylists()
         {
-
+            string xmlFile = @"data\playlists.xml";
+            if (File.Exists(xmlFile))
+            {
+                XElement doc = XElement.Load(xmlFile);
+                var playlists = doc.Elements("playlist");
+                foreach (var element in playlists)
+                {
+                    string name = element.Attribute("name").Value;
+                    var tracks = element.Elements("track");
+                    Playlist playlist = new Playlist(name);
+                    foreach (var t in tracks)
+                    {
+                        string trackPath = t.Attribute("path").Value;
+                        MusicTrack track = new MusicTrack(trackPath);
+                        playlist.AddTrack(track);
+                    }
+                    _playlists.Add(playlist);
+                }
+            }
+            else
+            {
+                _notifManager.ShowError("Couldn't find file " + xmlFile);
+            }
         }
 
         private void SavePlaylists()
         {
-
+            XDocument doc = new XDocument();
+            doc.Add(
+                new XElement(
+                    "playlists"
+                ));
+            XElement playlistsElement = doc.Element("playlists");
+            int n = _playlists.Count;
+            for (int i = 0; i < n; i++)
+            {
+                playlistsElement.Add(new XElement("playlist", 
+                    new XAttribute("name", _playlists[i].Name)));
+                XElement current = playlistsElement.Elements("playlist").Last();
+                var playlistTracks = _playlists[i].Tracks;
+                int tracksCount = playlistTracks.Count;
+                for (int j = 0; j < tracksCount; j++)
+                {
+                    current.Add(
+                        new XElement(
+                                "track",
+                                new XAttribute("path", playlistTracks[j].Path)
+                            ));
+                }
+            }
+            doc.Save(@"data\playlists.xml");
         }
 
         private void SaveMusicLibraries()
         {
+            XDocument doc = new XDocument();
+            doc.Add(
+                new XElement(
+                    "libraries"
+                ));
+            XElement librariesElement = doc.Element("libraries");
+            int n = _libraryFolders.Count;
+            for (int i = 0; i < n; i++)
+            {
+                librariesElement.Add(
+                        new XElement("folder", 
+                            new XAttribute("path", _libraryFolders[i])
+                            )
+                    );
+            }
+            doc.Save(@"data\libraries.xml");
+        }
 
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            SaveMusicLibraries();
+            SavePlaylists();
         }
     }
 }

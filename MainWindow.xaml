@@ -4,6 +4,7 @@
         Title="Don't Bother Me Player" Height="300" Width="300"
         MinWidth="300" 
         MinHeight="300"
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+        Closed="Window_Closed">
  
 </Window>

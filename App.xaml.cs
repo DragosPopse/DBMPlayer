@@ -28,5 +28,10 @@ namespace DBMPlayer
             );
             doc.Save("data/test.xml");
         }
+
+        private void Application_Exit(object sender, ExitEventArgs e)
+        {
+            
+        }
     }
 }
