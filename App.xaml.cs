@@ -17,16 +17,7 @@ namespace DBMPlayer
     {
         public App()
         {
-            XDocument doc = new XDocument();
-            doc.Add(
-                new XElement("playlist",
-                    new XAttribute("name", "CEFAM"),
-                    new XElement("track",
-                        new XAttribute("path", "cxxx")
-                    )
-                )
-            );
-            doc.Save("data/test.xml");
+            
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)
