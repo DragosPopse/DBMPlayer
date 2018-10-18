@@ -19,6 +19,7 @@ using System.Windows.Forms;
 using System.Windows.Controls.Primitives;
 using Microsoft.Win32;
 using System.IO;
+using System.Xml.Linq;
 
 
 using NAudio.Wave;
@@ -39,6 +40,8 @@ namespace DBMPlayer
         private NotificationManager _notifManager;
 
         private List<MusicTrack> _libraryTracks;
+        private List<string> _libraryFolders;
+        private List<Playlist> _playlists;
 
         public MainWindow() 
         {
@@ -46,28 +49,37 @@ namespace DBMPlayer
             _notifManager = new NotificationManager();
             _keyHook = new GlobalKeyboardHook();
             _libraryTracks = new List<MusicTrack>();
-
-            //_keyHook.AddCallback("Play", Keys.NumPad5, Play);
-            _keyHook.AddCallback("HideShow", Keys.NumPad2, 
-                () => 
-            {
-                
-                if (Visibility != Visibility.Hidden)
-                {
-                    Visibility = Visibility.Hidden;
-                }
-                else
-                {
-                    Visibility = Visibility.Visible;
-                }
-            });
-
+            _libraryFolders = new List<string>();
+            _playlists = new List<Playlist>();
             _timer = new DispatcherTimer();
+
+            AddKeyboardCallbacks();
+            
             _timer.Tick += new EventHandler(UpdateKeyboardHook);
             _timer.Interval += new TimeSpan(0, 0, 0, 0, 34);
             _timer.Start();
 
-            AddTracksFromFolder(@"D:\Music\");
+            LoadMusicLibraries();
+            LoadPlaylists();
+        }
+
+        private void AddKeyboardCallbacks()
+        {
+            _keyHook.AddCallback("HideShow", Keys.NumPad2,
+                () =>
+                {
+
+                    if (Visibility != Visibility.Hidden)
+                    {
+                        Visibility = Visibility.Hidden;
+                    }
+                    else
+                    {
+                        Visibility = Visibility.Visible;
+                    }
+                });
+
+            //_keyHook.AddCallback("Play", Keys.NumPad5, Play);
         }
 
         private void UpdateKeyboardHook(object sender, EventArgs e)
@@ -81,8 +93,49 @@ namespace DBMPlayer
             for (int i = 0; i < trackPaths.Length; i++)
             {
                 _libraryTracks.Add(new MusicTrack(trackPaths[i]));
-                //_notifManager.ShowInfo(trackPaths[i]);
             }
+        }
+
+        private void LoadMusicLibraries()
+        {
+            string xmlFile = @"data\libraries.xml";
+            if (File.Exists(xmlFile))
+            {
+                XElement doc = XElement.Load(xmlFile);
+                var folders = doc.Elements("folder");
+                foreach (var folder in folders)
+                {
+                    string folderPath = folder.Attribute("path").Value;
+                    if (Directory.Exists(folderPath))
+                    {
+                        _libraryFolders.Add(folderPath);
+                        AddTracksFromFolder(folderPath);
+                    }
+                    else
+                    {
+                        _notifManager.ShowError("Couldn't find directory " + folderPath);
+                    }
+                }
+            }
+            else
+            {
+                _notifManager.ShowError("Couldn't find file " + xmlFile);
+            }
+        }
+
+        private void LoadPlaylists()
+        {
+
+        }
+
+        private void SavePlaylists()
+        {
+
+        }
+
+        private void SaveMusicLibraries()
+        {
+
         }
     }
 }

@@ -19,5 +19,25 @@ namespace DBMPlayer
                 Message = message
             });
         }
+
+        public static void ShowError(this NotificationManager manager, string message)
+        {
+            manager.Show(new NotificationContent
+            {
+                Title = "Error",
+                Type = NotificationType.Error,
+                Message = message
+            });
+        }
+
+        public static void ShowWarning(this NotificationManager manager, string message)
+        {
+            manager.Show(new NotificationContent
+            {
+                Title = "Warning",
+                Type = NotificationType.Warning,
+                Message = message
+            });
+        }
     }
 }

@@ -63,6 +63,7 @@ namespace DBMPlayer
             _tracks = new List<MusicTrack>();
             _playOrder = new List<int>();
             _playIndex = 0;
+            _currentOrderIndex = 0;
         }
 
         public void AddTrack(MusicTrack track)
@@ -81,7 +82,7 @@ namespace DBMPlayer
         {
             if (usePlayOrder)
             {
-                _tracks[_currentOrderIndex].Stop();
+                _tracks[_playOrder[_currentOrderIndex]].Stop();
                 _currentOrderIndex++;
             }
             else
@@ -95,13 +96,28 @@ namespace DBMPlayer
         {
             if (usePlayOrder)
             {
-                _tracks[_currentOrderIndex].Stop();
+                _tracks[_playOrder[_currentOrderIndex]].Stop();
                 _currentOrderIndex--;
             }
             else
             {
                 _tracks[_playIndex].Stop();
                 _playIndex--;
+            }
+        }
+
+        public void Shuffle()
+        {
+            _currentOrderIndex = 0;
+            int n = _playOrder.Count;
+            Random rand = new Random();
+            
+            for (int i = 0; i < n - 2; i++)
+            {
+                int j = rand.Next(i, n);
+                int aux = _playOrder[i];
+                _playOrder[i] = _playOrder[j];
+                _playOrder[j] = aux;
             }
         }
     }
