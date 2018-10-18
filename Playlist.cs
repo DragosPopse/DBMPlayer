@@ -8,15 +8,15 @@ namespace DBMPlayer
 {
     class Playlist
     {
-        public int PlayIndex
+        public int CurrentIndex
         {
             set
             {
-                _playIndex = value;
+                _currentIndex = value;
             }
             get
             {
-                return _playIndex;
+                return _currentIndex;
             }
         }
 
@@ -60,18 +60,31 @@ namespace DBMPlayer
             }
         }
 
+        public bool UsePlayOrder
+        {
+            get
+            {
+                return _usePlayOrder;
+            }
+            set
+            {
+                _usePlayOrder = value;
+            }
+        }
+
         private List<MusicTrack> _tracks;
         private List<int> _playOrder;
-        private int _playIndex;
+        private int _currentIndex;
         private int _currentOrderIndex;
         private bool _repeat;
         private string _name;
+        private bool _usePlayOrder;
 
         public Playlist(string name)
         {
             _tracks = new List<MusicTrack>();
             _playOrder = new List<int>();
-            _playIndex = 0;
+            _currentIndex = 0;
             _currentOrderIndex = 0;
             _name = name;
         }
@@ -88,31 +101,31 @@ namespace DBMPlayer
             _playOrder.Remove(index);
         }
         
-        public void Next(bool usePlayOrder)
+        public void Next()
         {
-            if (usePlayOrder)
+            if (_usePlayOrder)
             {
                 _tracks[_playOrder[_currentOrderIndex]].Stop();
                 _currentOrderIndex++;
             }
             else
             {
-                _tracks[_playIndex].Stop();
-                _playIndex++;
+                _tracks[_currentIndex].Stop();
+                _currentIndex++;
             }
         }
 
-        public void Previous(bool usePlayOrder)
+        public void Previous()
         {
-            if (usePlayOrder)
+            if (_usePlayOrder)
             {
                 _tracks[_playOrder[_currentOrderIndex]].Stop();
                 _currentOrderIndex--;
             }
             else
             {
-                _tracks[_playIndex].Stop();
-                _playIndex--;
+                _tracks[_currentIndex].Stop();
+                _currentIndex--;
             }
         }
 
@@ -128,6 +141,42 @@ namespace DBMPlayer
                 int aux = _playOrder[i];
                 _playOrder[i] = _playOrder[j];
                 _playOrder[j] = aux;
+            }
+        }
+
+        public void Play()
+        {
+            if (_usePlayOrder)
+            {
+                _tracks[_playOrder[_currentOrderIndex]].Play();
+            }
+            else
+            {
+                _tracks[_currentIndex].Play();
+            }
+        }
+
+        public void Stop()
+        {
+            if (_usePlayOrder)
+            {
+                _tracks[_playOrder[_currentOrderIndex]].Stop();
+            }
+            else
+            {
+                _tracks[_currentIndex].Stop();
+            }
+        }
+
+        public void Pause()
+        {
+            if (_usePlayOrder)
+            {
+                _tracks[_playOrder[_currentOrderIndex]].Pause();
+            }
+            else
+            {
+                _tracks[_currentIndex].Pause();
             }
         }
     }
